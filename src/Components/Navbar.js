@@ -1,84 +1,148 @@
-import React, { useState } from "react";
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineMenu, AiOutlineClose, AiOutlineUser } from "react-icons/ai";
+import { MdAccountCircle, MdExitToApp, MdLogin } from "react-icons/md";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+  const navigate = useNavigate();
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Templates", href: "#templates" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", path: "/" },
+    { name: "Templates", path: "/templates" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
+  const profileMenuItems = [
+    { name: "My Profile", icon: <MdAccountCircle className="text-lg" />, path: "/profile" },
+    { name: "Login", icon: <MdLogin className="text-lg" />, path: "/login" },
+    { name: "Logout", icon: <MdExitToApp className="text-lg" />, path: "/logout" },
+  ];
+
+  const handleProfileClick = (path) => {
+    setProfileOpen(false);
+    navigate(path);
+  };
+
+  const handleMobileClick = (path) => {
+    setOpen(false);
+    navigate(path);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <nav className="w-full bg-white shadow-md fixed top-0 z-50">
-      {/* Navbar Container */}
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="w-full fixed top-0 z-50">
+      {/* Gradient Background */}
+      <div className="bg-gradient-to-r from-[#043442] via-[#0f5265] to-[#1a6378] shadow-lg">
         
-        {/* Logo */}
-        <h1 className="text-2xl font-bold text-blue-600">
-          Resume<span className="text-yellow-500">Builder</span>
-        </h1>
+        {/* Navbar Container */}
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          
+          {/* Logo with better color */}
+          <Link to="/" className="text-2xl font-bold text-white">
+            Resume<span className="text-[#4ecdc4]">Builder</span>
+          </Link>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
-          {navLinks.map((link, index) => (
-            <li key={index}>
-              <a
-                href={link.href}
-                className="hover:text-blue-600 duration-200"
-              >
-                {link.name}
-              </a>
-            </li>
-          ))}
-        </ul>
+          {/* Desktop Links */}
+          <ul className="hidden md:flex space-x-8 font-medium">
+            {navLinks.map((link, index) => (
+              <li key={index}>
+                <Link
+                  to={link.path}
+                  className="text-[#e5e7e7] hover:text-white hover:scale-105 duration-200 transition-all"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-        {/* Auth Buttons */}
-        <div className="hidden md:flex space-x-4">
-          <button className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">
-            Login
-          </button>
-          <button className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-200">
-            Sign Up
+          {/* Profile Icon with Dropdown */}
+          <div className="hidden md:block relative" ref={profileRef}>
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[#4ecdc4] to-[#44a08d] hover:from-[#5eddd4] hover:to-[#54b09d] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+            >
+              <AiOutlineUser className="text-white text-lg" />
+            </button>
+
+            {/* Dropdown Menu */}
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-gray-200">
+                {profileMenuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleProfileClick(item.path)}
+                    className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-[#f0f7f7] hover:text-[#043442] transition duration-200"
+                  >
+                    <span className="mr-3 text-[#4ecdc4]">{item.icon}</span>
+                    <span className="font-medium">{item.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Button */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden text-2xl text-[#e5e7e7] hover:text-white transition duration-200"
+          >
+            {open ? <AiOutlineClose /> : <AiOutlineMenu />}
           </button>
         </div>
 
-        {/* Mobile Button */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-2xl text-gray-700"
-        >
-          {open ? <AiOutlineClose /> : <AiOutlineMenu />}
-        </button>
+        {/* Mobile Menu with gradient */}
+        {open && (
+          <div className="md:hidden bg-gradient-to-b from-[#043442] to-[#1a6378] shadow-xl">
+            <ul className="flex flex-col space-y-6 p-8">
+              {navLinks.map((link, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => handleMobileClick(link.path)}
+                    className="text-[#e5e7e7] hover:text-white text-lg font-medium duration-200 block py-2 w-full text-left"
+                  >
+                    {link.name}
+                  </button>
+                </li>
+              ))}
+
+              {/* Divider */}
+              <hr className="border-[#2a6d7c] my-2" />
+
+              {/* Mobile Profile Menu Items */}
+              <div className="flex flex-col space-y-4 pt-2">
+                {profileMenuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleMobileClick(item.path)}
+                    className="flex items-center px-4 py-3 text-[#e5e7e7] hover:text-white hover:bg-[#2a6d7c] rounded-lg transition duration-200 w-full text-left"
+                  >
+                    <span className="mr-3 text-[#4ecdc4]">{item.icon}</span>
+                    <span className="font-medium">{item.name}</span>
+                  </button>
+                ))}
+              </div>
+            </ul>
+          </div>
+        )}
       </div>
-
-      {/* Mobile Menu */}
-      {open && (
-        <ul className="md:hidden bg-white flex flex-col space-y-4 p-6 text-gray-800 font-medium shadow-lg">
-          {navLinks.map((link, index) => (
-            <li key={index}>
-              <a
-                href={link.href}
-                className="hover:text-blue-600 duration-200"
-                onClick={() => setOpen(false)}
-              >
-                {link.name}
-              </a>
-            </li>
-          ))}
-
-          <hr />
-
-          <button className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">
-            Login
-          </button>
-          <button className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-200">
-            Sign Up
-          </button>
-        </ul>
-      )}
     </nav>
   );
 };
