@@ -3,10 +3,9 @@ import Navbar from "./Components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Editor from "./pages/Editor"; // 👈 Added Editor page import
 import Templates from "./pages/Templates";
 import About from "./pages/About";
-import Editor from "./pages/Editor"; // 👈 Added Editor page import
-
 function App() {
   return (
     <Router>
@@ -22,14 +21,14 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/about" element={<About />} />
-
-            {/* 👇 New route for template editor */}
+               {/* 👇 New route for template editor */}
             <Route path="/editor/:id" element={<Editor />} />
+              <Route path="/faqs" element={<Faqs />} />
+                {/*<Route path="/profile" element={<Profile />} /> */}
+            <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
 
-            {/* Logout simply redirects to Home */}
-            <Route path="/logout" element={<Home />} />
           </Routes>
-        </main>
+       
       </div>
     </Router>
   );
