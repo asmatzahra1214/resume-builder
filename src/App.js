@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Home from './pages/Home';
 import Templates from './pages/Templates';
 import About from './pages/About';
-// import Contact from './pages/Contact';
+import Faqs from './pages/Faqs';
 // import Profile from './pages/Profile';
 
 function App() {
@@ -20,8 +20,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/about" element={<About />} />
-            {/* <Route path="/contact" element={<Contact />} />
-            <Route path="/profile" element={<Profile />} /> */}
+             <Route path="/faqs" element={<Faqs />} />
+            {/*<Route path="/profile" element={<Profile />} /> */}
             <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
           </Routes>
         </main>
