@@ -13,7 +13,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Templates", path: "/templates" },
     { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: "Help", path: "/faqs" },
   ];
 
   const profileMenuItems = [
