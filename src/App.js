@@ -6,7 +6,7 @@ import Signup from "./pages/Signup";
 import Templates from "./pages/Templates";
 import About from "./pages/About";
 import Editor from "./pages/Editor"; // 👈 Added Editor page import
-
+import Faqs from './pages/Faqs';
 function App() {
   return (
     <Router>
@@ -28,6 +28,7 @@ function App() {
 
             {/* Logout simply redirects to Home */}
             <Route path="/logout" element={<Home />} />
+             <Route path="/faqs" element={<Faqs />} />
           </Routes>
         </main>
       </div>
