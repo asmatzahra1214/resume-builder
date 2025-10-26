@@ -3,10 +3,10 @@ import Navbar from "./Components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Templates from "./pages/Templates";
-import About from "./pages/About";
 import Editor from "./pages/Editor"; // 👈 Added Editor page import
-import Faqs from './pages/Faqs';
+import Templates from "./pages/Templates";
+import Faqs from "./pages/Faqs";
+import About from "./pages/About";
 function App() {
   return (
     <Router>
@@ -22,15 +22,14 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/about" element={<About />} />
-
-            {/* 👇 New route for template editor */}
+               {/* 👇 New route for template editor */}
             <Route path="/editor/:id" element={<Editor />} />
+              <Route path="/faqs" element={<Faqs />} />
+                {/*<Route path="/profile" element={<Profile />} /> */}
+            <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
 
-            {/* Logout simply redirects to Home */}
-            <Route path="/logout" element={<Home />} />
-             <Route path="/faqs" element={<Faqs />} />
           </Routes>
-        </main>
+       </main>
       </div>
     </Router>
   );
