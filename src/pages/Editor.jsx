@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-
+import { saveAs } from "file-saver";
 import DarkTemplate from "../templates/DarkTemplate";
 import ClassicTemplate from "../templates/ClassicTemplate";
 import MinimalTemplate from "../templates/MinimalTemplate";
@@ -12,7 +12,7 @@ export default function Editor() {
   const resumeRef = useRef(null);
   const navigate = useNavigate();
 
-  // ✅ Redirect to login if not logged in
+  // ✅ Redirect if not logged in
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (!user) {
@@ -36,47 +36,73 @@ export default function Editor() {
     showPhoto: true,
   });
 
-  // ✅ Handle input changes
+  // ✅ Handle all text input changes
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle photo upload + preview
+  // ✅ Upload image & convert to Base64
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setData({ ...data, photo: reader.result });
+        setData((prev) => ({ ...prev, photo: reader.result, showPhoto: true }));
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleTogglePhoto = () => {
-    setData({ ...data, showPhoto: !data.showPhoto });
+    setData((prev) => ({ ...prev, showPhoto: !prev.showPhoto }));
   };
 
+  // ✅ Save to localStorage
   const handleSave = () => {
     localStorage.setItem("resumeData", JSON.stringify(data));
     alert("✅ Resume saved successfully!");
   };
 
-  // ✅ PDF Download
-  const handleDownload = async () => {
+  // ✅ Download PDF
+  const handleDownloadPDF = async () => {
     const element = resumeRef.current;
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
-
     const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    const width = pdf.internal.pageSize.getWidth();
+    const height = (canvas.height * width) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 0, width, height);
     pdf.save(`${data.name.replace(/\s+/g, "_")}_Resume.pdf`);
   };
 
-  // ✅ Always format skills/experience before passing to template
+  // ✅ Download Image
+  const handleDownloadImage = async () => {
+    const element = resumeRef.current;
+    const canvas = await html2canvas(element, { scale: 2 });
+    canvas.toBlob((blob) => {
+      saveAs(blob, `${data.name.replace(/\s+/g, "_")}_Resume.png`);
+    });
+  };
+
+  // ✅ Download DOCX (optional)
+  const handleDownloadDOCX = () => {
+    const content = `
+      Name: ${data.name}\n
+      Title: ${data.title}\n
+      Email: ${data.email}\n
+      Phone: ${data.phone}\n
+      Location: ${data.location}\n
+      About: ${data.about}\n
+      Skills: ${data.skills}\n
+      Experience:\n${data.experience}
+    `;
+    const blob = new Blob([content], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    saveAs(blob, `${data.name.replace(/\s+/g, "_")}_Resume.docx`);
+  };
+
+  // ✅ Format data for templates
   const formattedData = {
     ...data,
     skills: Array.isArray(data.skills)
@@ -87,6 +113,7 @@ export default function Editor() {
       : data.experience.split("\n").map((exp) => exp.trim()),
   };
 
+  // ✅ Choose template
   const renderTemplate = () => {
     switch (id) {
       case "dark":
@@ -105,11 +132,10 @@ export default function Editor() {
       </h1>
 
       <div className="flex flex-wrap justify-center gap-10">
-        {/* Left Form */}
+        {/* 🧾 Left Form */}
         <div className="w-80 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-[#043442]">Edit Info</h2>
 
-          {/* 👤 Image Preview */}
           {data.photo && data.showPhoto && (
             <img
               src={data.photo}
@@ -166,7 +192,9 @@ export default function Editor() {
             className="w-full border border-gray-300 p-2 rounded mb-3"
           />
 
-          <label className="block mb-2 text-sm font-semibold">Skills (comma separated)</label>
+          <label className="block mb-2 text-sm font-semibold">
+            Skills (comma separated)
+          </label>
           <textarea
             name="skills"
             value={data.skills}
@@ -184,7 +212,7 @@ export default function Editor() {
             className="w-full border border-gray-300 p-2 rounded mb-4"
           />
 
-          {/* Upload Photo */}
+          {/* Upload & Photo Buttons */}
           <label className="block mb-2 text-sm font-semibold">Upload Photo</label>
           <input
             type="file"
@@ -211,16 +239,34 @@ export default function Editor() {
             Save Changes
           </button>
 
-          <button
-            onClick={handleDownload}
-            className="bg-green-700 text-white py-2 px-4 rounded w-full hover:bg-green-800"
-          >
-            Download PDF
-          </button>
+          {/* ✅ Multiple Download Options */}
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={handleDownloadPDF}
+              className="bg-green-700 text-white py-2 px-4 rounded w-full hover:bg-green-800"
+            >
+              Download PDF
+            </button>
+            <button
+              onClick={handleDownloadImage}
+              className="bg-blue-700 text-white py-2 px-4 rounded w-full hover:bg-blue-800"
+            >
+              Download Image
+            </button>
+            <button
+              onClick={handleDownloadDOCX}
+              className="bg-indigo-700 text-white py-2 px-4 rounded w-full hover:bg-indigo-800"
+            >
+              Download DOCX
+            </button>
+          </div>
         </div>
 
-        {/* Live Template Preview */}
-        <div ref={resumeRef} className="scale-90 origin-top bg-white shadow-lg p-6 rounded-lg">
+        {/* 🖥️ Live Template Preview */}
+        <div
+          ref={resumeRef}
+          className="scale-90 origin-top bg-white shadow-lg p-6 rounded-lg"
+        >
           {renderTemplate()}
         </div>
       </div>
