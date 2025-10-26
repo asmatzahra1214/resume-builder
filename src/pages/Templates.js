@@ -1,86 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { templatesData } from "../data/templateData"; // ✅ Import dummy data file
 
 export default function Templates() {
   const navigate = useNavigate();
 
-  const templates = [
-    {
-      id: "dark",
-      name: "Dark Theme",
-      desc: "Elegant dark mode resume layout with glowing accents and clean typography — ideal for tech professionals.",
-      bgColor: "#1a1a1a",
-      textColor: "#ffffff",
-      previewColor: "#111827",
-      layout: "left", // color block left
-    },
-    {
-      id: "classic",
-      name: "Classic Template",
-      desc: "A timeless professional layout with neat sections, ideal for corporate or academic resumes.",
-      bgColor: "#ffffff",
-      textColor: "#043442",
-      previewColor: "#e5e7eb",
-      layout: "right", // color block right
-    },
-    {
-      id: "minimal",
-      name: "Minimal Template",
-      desc: "Simple, clean, and distraction-free — perfect for modern creative resumes with focus on content.",
-      bgColor: "#f5f5f5",
-      textColor: "#043442",
-      previewColor: "#d1d5db",
-      layout: "center", // center layout
-    },
-  ];
+  const allTemplates = templatesData; // ✅ Use from data file
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
+
+  const filteredTemplates = allTemplates.filter((t) => {
+    const matchesType = filter === "all" || t.id === filter;
+    const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase());
+    return matchesType && matchesSearch;
+  });
 
   return (
-    <div className="min-h-screen bg-[#e5e7e7] flex flex-col items-center p-10">
-      <h1 className="text-4xl font-bold text-[#043442] mb-4">Resume Templates</h1>
-      <p className="text-gray-700 max-w-2xl text-center mb-10 leading-relaxed">
-        Explore different resume styles — from dark and bold to minimal and classic. 
-        Each template is crafted for different professional personalities.
-      </p>
+    <div className="min-h-screen bg-[#e5e7e7] flex flex-col items-center p-8">
+      <h1 className="text-4xl font-bold text-[#043442] mb-4">
+        Resume Templates
+      </h1>
 
-      <div className="flex flex-col gap-12 w-full max-w-6xl">
-        {templates.map((template, index) => (
+      {/* 🔍 Search + Filter */}
+      <div className="flex flex-col md:flex-row gap-4 mb-10 w-full max-w-5xl justify-center">
+        <input
+          type="text"
+          placeholder="Search template..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-[#043442]"
+        />
+
+        <div className="flex gap-2 flex-wrap justify-center">
+          {["all", ...allTemplates.map((t) => t.id)].slice(0, 5).map((type) => (
+            <button
+              key={type}
+              onClick={() => setFilter(type)}
+              className={`px-4 py-2 rounded-full font-medium transition-all ${
+                filter === type
+                  ? "bg-[#043442] text-white"
+                  : "bg-white text-[#043442] border border-[#043442]/30 hover:bg-[#043442]/10"
+              }`}
+            >
+              {type === "all"
+                ? "All Templates"
+                : type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 🧩 Templates Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full max-w-7xl">
+        {filteredTemplates.map((template) => (
           <div
             key={template.id}
-            className={`flex flex-col md:flex-row items-center justify-between bg-white shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] ${
-              template.layout === "right" ? "md:flex-row-reverse" : ""
-            }`}
+            onClick={() => navigate(`/editor/${template.id}`)}
+            className="relative group bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all overflow-hidden cursor-pointer"
           >
-            {/* Preview Section */}
+            {/* Dummy Resume Preview */}
             <div
-              className="w-full md:w-1/2 h-56 md:h-72 flex items-center justify-center"
-              style={{ backgroundColor: template.previewColor, color: template.textColor }}
+              className="h-56 p-4 flex flex-col justify-between"
+              style={{
+                background: template.previewColor,
+                color: template.accent,
+              }}
             >
-              <div className="text-center">
-                <h2 className="text-2xl font-bold mb-2">{template.name}</h2>
-                <div className="w-32 h-40 bg-white/20 border border-white/30 rounded-md mx-auto"></div>
+              {/* Name + Title */}
+              <div>
+                <h3 className="font-bold text-base mb-1">
+                  {template.data.name}
+                </h3>
+                <p className="text-sm opacity-80">{template.data.title}</p>
+              </div>
+
+              {/* Skills Bars */}
+              <div className="mt-4">
+                <div
+                  className="w-4/5 h-2 mb-2 rounded"
+                  style={{ background: template.accent }}
+                ></div>
+                <div
+                  className="w-3/5 h-2 mb-2 rounded"
+                  style={{ background: template.accent }}
+                ></div>
+                <div
+                  className="w-2/5 h-2 mb-2 rounded"
+                  style={{ background: template.accent }}
+                ></div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="flex flex-col gap-1 text-xs opacity-70 mt-auto">
+                <div>📧 {template.data.email}</div>
+                <div>📞 {template.data.phone}</div>
               </div>
             </div>
 
-            {/* Info Section */}
-            <div className="w-full md:w-1/2 p-8 flex flex-col items-center md:items-start text-center md:text-left">
-              <h2
-                className="text-2xl font-semibold mb-3"
-                style={{ color: template.textColor }}
-              >
-                {template.name}
-              </h2>
-              <p className="text-gray-600 mb-5">{template.desc}</p>
+            {/* Hover Overlay */}
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white">
+              <h3 className="text-lg font-semibold mb-2">{template.name}</h3>
               <button
                 onClick={() => navigate(`/editor/${template.id}`)}
-                className="bg-[#043442] text-white px-5 py-2 rounded-lg font-semibold hover:bg-[#032c36] transition"
+                className="bg-[#38bdf8] text-[#0f172a] px-4 py-2 rounded-lg font-semibold hover:bg-[#7dd3fc] transition"
               >
-                View Template
+                Use Template
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Footer */}
       <footer className="mt-16 text-gray-500 text-sm text-center">
         © {new Date().getFullYear()} Resume Builder | All Rights Reserved
       </footer>
