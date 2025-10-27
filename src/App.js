@@ -4,11 +4,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Editor from "./pages/Editor"; // 👈 Added Editor page import
-import Templates from "./pages/Templates";
-<<<<<<< HEAD
+import Templates from "./pages/Templates"
 import Faqs from "./pages/Faqs";
-=======
->>>>>>> origin/templates-page-zulqarnain
 import About from "./pages/About";
 function App() {
   return (
@@ -32,11 +29,11 @@ function App() {
             <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
 
           </Routes>
-<<<<<<< HEAD
+
        </main>
-=======
+
        
->>>>>>> origin/templates-page-zulqarnain
+
       </div>
     </Router>
   );
