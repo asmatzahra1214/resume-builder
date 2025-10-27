@@ -1,7 +1,7 @@
 const sampleData = {
-  name: "Zulqarnain Malik",
+  name: "Zain Malik",
   title: "Frontend Developer",
-  email: "zulqarnain@gmail.com",
+  email: "zain@gmail.com",
   phone: "0300-1234567",
   location: "Lahore, Pakistan",
   about: "Passionate developer skilled in React, Tailwind CSS and modern UI.",
