@@ -1,13 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Navbar from "./Components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Editor from "./pages/Editor"; // 👈 Added Editor page import
-import Templates from "./pages/Templates"
 import Faqs from "./pages/Faqs";
 import About from "./pages/About";
+import UploadResume from "./pages/UploadResume";
+import ResumeLanding from "./pages/ResumeLanding";
+import CreateResume from "./pages/CreateResume";
 function App() {
+
+
   return (
     <Router>
       <div className="App">
@@ -20,13 +24,15 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/templates" element={<Templates />} />
+            
             <Route path="/about" element={<About />} />
-               {/* 👇 New route for template editor */}
-            <Route path="/editor/:id" element={<Editor />} />
-              <Route path="/faqs" element={<Faqs />} />
+            <Route path="/upload" element={<UploadResume />} />
+            <Route path="/faqs" element={<Faqs />} />
+            <Route path="/create" element={<CreateResume />} />
+            <Route path="/ResumeLanding" element={<ResumeLanding />} />
                 {/*<Route path="/profile" element={<Profile />} /> */}
             <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
+            
 
           </Routes>
 
