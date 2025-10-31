@@ -5,8 +5,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
-import Editor from "./pages/Editor"; // 👈 Added Editor page import
-import Templates from "./pages/Templates";
 
 import Faqs from "./pages/Faqs";
 import About from "./pages/About";
