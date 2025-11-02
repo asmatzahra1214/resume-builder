@@ -4,7 +4,7 @@ import Navbar from "./Components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
+import JobSearch from "./pages/JobSearch";
 
 import Faqs from "./pages/Faqs";
 import About from "./pages/About";
@@ -34,7 +34,7 @@ function App() {
             <Route path="/ResumeLanding" element={<ResumeLanding />} />
                 {/*<Route path="/profile" element={<Profile />} /> */}
             <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
-            
+            <Route path="/jobs" element={<JobSearch />} />
 
           </Routes>
        </main>
