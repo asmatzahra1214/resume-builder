@@ -19,33 +19,6 @@ import Users from "./Admin/Users";
 // Separate component for admin routes
 function AdminRoutes() {
   return (
-<<<<<<< HEAD
-    <Router>
-      <div className="App">
-        {/* Fixed Navbar on top */}
-        <Navbar />
-
-        {/* Padding top to prevent content overlap with navbar */}
-        <main className="pt-16">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            
-            <Route path="/about" element={<About />} />
-            <Route path="/upload" element={<UploadResume />} />
-            <Route path="/faqs" element={<Faqs />} />
-            <Route path="/create" element={<CreateResume />} />
-            <Route path="/ResumeLanding" element={<ResumeLanding />} />
-                {/*<Route path="/profile" element={<Profile />} /> */}
-            <Route path="/logout" element={<Home />} /> {/* Redirect to home after logout */}
-            <Route path="/jobs" element={<JobSearch />} />
-
-          </Routes>
-       </main>
-      </div>
-    </Router>
-=======
     <AdminLayout>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
@@ -54,7 +27,6 @@ function AdminRoutes() {
         {/* <Route path="/settings" element={<AdminSettings />} /> */}
       </Routes>
     </AdminLayout>
->>>>>>> 8bb9b97cc4531c85863658a3246b48399d7ed991
   );
 }
 
