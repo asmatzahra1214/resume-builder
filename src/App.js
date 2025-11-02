@@ -4,6 +4,8 @@ import Navbar from "./Components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import JobSearch from "./pages/JobSearch";
+
 import Faqs from "./pages/Faqs";
 import About from "./pages/About";
 import UploadResume from "./pages/UploadResume";
