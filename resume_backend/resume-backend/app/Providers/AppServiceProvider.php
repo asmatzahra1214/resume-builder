@@ -21,5 +21,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+       if (app()->environment('local') && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // Method 1: Disable SSL verification for Guzzle
+        $this->app->bind('http.client', function () {
+            return new \GuzzleHttp\Client([
+                'verify' => false,
+                'timeout' => 60,
+            ]);
+        });
     }
-}
+}}
